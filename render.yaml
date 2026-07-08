@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: denver-apartment-search
+    runtime: python
+    plan: starter          # always-on. "free" works too but sleeps and can kill a mid-run search.
+    buildCommand: pip install -r requirements.txt
+    startCommand: python search_server.py
+    envVars:
+      - key: HOST
+        value: 0.0.0.0     # bind all interfaces so Render can route to it
+      - key: EXA_API_KEY
+        sync: false        # set in the Render dashboard, never committed
+      - key: FIRECRAWL_API_KEY
+        sync: false
