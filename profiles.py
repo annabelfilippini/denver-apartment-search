@@ -221,6 +221,30 @@ _DENVER_RING_HOODS = (
     "cheesman park", "city park", "city park west", "capitol hill", "cap hill",
     "park hill", "south park hill", "north park hill", "platt park", "baker",
     "university", "university park", "wellshire", "windsor",
+    # ~20-min-drive widen (2026-07-08): everything within a ~20-min drive of
+    # Cherry Creek, including the west side and downtown core. Sprawling suburbs
+    # (Aurora, Englewood, Greenwood Village) are bounded by ZIP in target_zips,
+    # not by these names, so only their inner/within-20-min part counts.
+    # East / northeast:
+    "central park", "stapleton", "east colfax", "northeast park hill",
+    # North-central / downtown:
+    "five points", "whittier", "cole", "clayton", "skyland",
+    "uptown", "north capitol hill", "downtown", "downtown denver", "lodo",
+    "lower downtown", "rino", "river north", "union station", "ballpark",
+    "auraria", "lincoln park", "la alma", "golden triangle", "civic center",
+    "speer", "globeville",
+    # West / northwest (Highlands band):
+    "highlands", "highland", "west highland", "lohi", "lower highlands",
+    "sunnyside", "berkeley", "regis", "chaffee park", "jefferson park",
+    "sloan's lake", "sloans lake", "sloan lake", "west colfax", "villa park",
+    # South / southwest:
+    "rosedale", "overland", "ruby hill", "athmar park", "valverde", "westwood",
+    # Southeast:
+    "university hills", "southmoor park", "southmoor", "hampden",
+    "hampden south", "goldsmith", "washington virginia vale", "virginia vale",
+    "indian creek", "denver tech center", "dtc",
+    # Inner-ring suburbs (also ZIP-bounded in target_zips):
+    "greenwood village", "holly hills", "englewood", "west aurora",
 )
 
 DENVER = SearchProfile(
@@ -250,6 +274,15 @@ DENVER = SearchProfile(
         "cheesman park", "city park", "city park west", "capitol hill",
         "park hill", "south park hill", "north park hill", "platt park",
         "baker", "university", "university park", "wellshire", "windsor",
+        # ~20-min widen (2026-07-08) — outer band shown below the core ring.
+        "central park", "east colfax", "five points", "whittier", "skyland",
+        "uptown", "downtown denver", "lodo", "rino", "golden triangle", "speer",
+        "highlands", "lohi", "west highland", "sunnyside", "berkeley",
+        "jefferson park", "sloan's lake", "west colfax",
+        "rosedale", "overland", "ruby hill", "athmar park",
+        "university hills", "southmoor park", "hampden", "goldsmith",
+        "washington virginia vale", "indian creek", "denver tech center",
+        "greenwood village", "holly hills", "englewood", "west aurora",
     ),
     cl_location_to_hood={
         "lohi": "lohi",
@@ -305,6 +338,41 @@ DENVER = SearchProfile(
         "university park": "university park",
         "wellshire": "wellshire",
         "windsor": "windsor",
+        # ~20-min widen (2026-07-08) — Craigslist neighborhood labels for the
+        # outer band. Unmapped labels still get rescued by target-ZIP.
+        "central park": "central park",
+        "stapleton": "central park",
+        "downtown": "downtown",
+        "downtown denver": "downtown",
+        "union station": "lodo",
+        "river north": "rino",
+        "rino art district": "rino",
+        "highland": "highlands",
+        "highlands": "highlands",
+        "lohi": "lohi",
+        "lower highlands": "lohi",
+        "sunnyside": "sunnyside",
+        "berkeley": "berkeley",
+        "jefferson park": "jefferson park",
+        "sloans lake": "sloan's lake",
+        "sloan's lake": "sloan's lake",
+        "west colfax": "west colfax",
+        "rosedale": "rosedale",
+        "overland": "overland",
+        "athmar park": "athmar park",
+        "university hills": "university hills",
+        "southmoor": "southmoor park",
+        "southmoor park": "southmoor park",
+        "hampden": "hampden",
+        "hampden south": "hampden",
+        "goldsmith": "goldsmith",
+        "washington virginia vale": "washington virginia vale",
+        "virginia vale": "washington virginia vale",
+        "indian creek": "indian creek",
+        "dtc": "denver tech center",
+        "denver tech center": "denver tech center",
+        "greenwood village": "greenwood village",
+        "englewood": "englewood",
     },
     require_neighborhood_match=True,
     # Ring ZIPs only. Used to rescue results whose text gives a ZIP but no hood
@@ -326,6 +394,26 @@ DENVER = SearchProfile(
         "80205": "city park",
         "80207": "park hill",
         "80247": "windsor",
+        # ~20-min widen (2026-07-08). Sprawling suburbs are capped HERE (by ZIP)
+        # so only their within-20-min part is kept; far ZIPs stay off the list
+        # and are dropped as "elsewhere".
+        "80238": "central park",
+        "80202": "downtown",
+        "80204": "lincoln park",
+        "80211": "highlands",
+        "80212": "berkeley",
+        "80216": "rino",
+        "80214": "sloan's lake",
+        "80221": "sunnyside",
+        "80219": "athmar park",
+        "80223": "baker",
+        "80231": "hampden",
+        "80237": "southmoor park",
+        "80110": "englewood",
+        "80111": "greenwood village",
+        "80010": "east colfax",
+        "80012": "west aurora",
+        "80014": "west aurora",
     },
     city_zip_prefixes=("800", "801", "802"),
     region_zip_pattern=r"\b(8\d{4})\b",
@@ -391,18 +479,30 @@ DENVER = SearchProfile(
     # ~10-min drive ring around Cherry Creek (Wash Park west → Lowry east,
     # Country Club north → Cherry Hills south), WIDENED by ~1 mile on every side
     # (2026-06-19). At ~39.7°N, 1 mi ≈ 0.019° lon / 0.0145° lat.
-    zillow_map_bounds={"west": -105.02, "east": -104.86, "south": 39.645, "north": 39.775},
+    # ~20-min-drive box around Cherry Creek (2026-07-08), roughly doubled from
+    # the ~10-min ring: Sloan's Lake/West Colfax (west) to inner Aurora (east),
+    # Central Park/downtown (north) to DTC/Englewood (south).
+    zillow_map_bounds={"west": -105.11, "east": -104.79, "south": 39.58, "north": 39.84},
     exa_neighborhoods=(
         "cherry creek", "cherry creek north", "hilltop", "hale",
         "washington park", "country club", "congress park", "glendale",
         # +1-mile ring widen (2026-06-19)
         "cheesman park", "city park", "park hill", "platt park", "university",
+        # ~20-min widen (2026-07-08) — added high-inventory hoods to sweep. The
+        # gate (ring hoods + target_zips) keeps results in-area; this just widens
+        # what Exa actively searches. Kept to a curated subset to bound Exa cost.
+        "central park", "five points", "rino", "downtown denver",
+        "highlands", "lohi", "sloan's lake", "berkeley",
+        "university hills", "hampden", "southmoor", "englewood",
+        "greenwood village",
     ),
     # Owner-direct Reddit sweep (added 2026-06-20). r/DenverList is the local
     # classifieds sub; r/Denver and r/Colorado carry occasional "renting my house"
     # posts. The ring filter drops anything not in/near Cherry Creek automatically.
     reddit_subreddits=("DenverList", "Denver", "Colorado"),
-    blocked_location_markers=(),
+    # Same-name far suburbs that would substring-match a ring hood ("highlands"
+    # matches "Highlands Ranch", ~25+ min south). Dropped before the hood gate.
+    blocked_location_markers=("highlands ranch", "highland ranch"),
     listing_noun="house",
     min_bathrooms=2,
     enrich_details=True,
